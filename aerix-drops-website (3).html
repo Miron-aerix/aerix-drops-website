@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AERIX DROPS | Utility Hub</title>
+<meta name="description" content="AERIX DROPS is a free, community-made Fortnite utility: Drop Planner, VOD Review, Learning Hub and Warmup Routine in one place.">
+<meta name="theme-color" content="#070b13">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AERIX DROPS | Utility Hub">
+<meta property="og:description" content="Free, community-made competitive utility for Fortnite players.">
+<!-- Nano-Banana-Bild (Prompt 7) hier eintragen, z. B. img/og.webp -->
+<meta property="og:image" content="">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 96 91 70 91 59 70 37 70 25 91 2 91 42 15Z' fill='%231265f5'/%3E%3Cpath d='M50 34 39 57 62 57Z' fill='%23070b13'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{
+  color-scheme:dark;
+  --night:#070b13;--deck:#0e1829;--deck-2:#13213a;--line:#22324d;--line-soft:#1a2740;
+  --signal:#1265f5;--signal-hi:#2f7bff;--ice:#35c8ff;--fog:#9aacc7;--text:#edf4ff;--amber:#e6aa38;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Figtree",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease-out:cubic-bezier(0,0,.2,1);--ease-in-out:cubic-bezier(.4,0,.2,1);--ease-soft:cubic-bezier(.215,.61,.355,1);
+  --wrap:min(1160px,calc(100% - 32px));
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--text);font:400 16px/1.65 var(--body);overflow-x:hidden}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ice);outline-offset:3px;border-radius:4px}
+.wrap{width:var(--wrap);margin-inline:auto}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:16px;top:-60px;background:var(--signal);color:#fff;padding:10px 14px;border-radius:8px;z-index:100;text-decoration:none;font-weight:700}
+.skip:focus{top:12px}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:0;z-index:50;background:rgba(7,11,19,.94);border-bottom:1px solid var(--line-soft)}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:68px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
+.brand svg{width:34px;height:34px}
+.brand b{font:800 15px/1 var(--display);letter-spacing:.06em}
+.brand b span{color:var(--ice)}
+.nav{display:flex;gap:4px}
+.nav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--fog);font-weight:600;font-size:15px;transition:color .15s var(--ease-out),background-color .15s var(--ease-out)}
+.nav a:hover,.nav a.active{color:var(--text);background:var(--deck)}
+.lang{background:none;border:1px solid var(--line);color:var(--text);font:700 13px/1 var(--body);padding:9px 11px;min-height:40px;min-width:44px;border-radius:8px;cursor:pointer;transition:border-color .15s var(--ease-out)}
+.lang:hover{border-color:var(--ice)}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:13px 20px;font:700 15px/1 var(--body);text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .15s var(--ease-out),background-color .15s var(--ease-out),border-color .15s var(--ease-out)}
+.btn:active{transform:scale(.97);transition-duration:80ms}
+.btn-primary{background:var(--signal);color:#fff}
+.btn-primary:hover{background:var(--signal-hi)}
+.btn-ghost{border-color:var(--line);color:var(--text);background:transparent}
+.btn-ghost:hover{border-color:var(--ice)}
+.btn-sm{padding:10px 14px;font-size:14px}
+
+/* ---------- Hero ---------- */
+.hero{padding:64px 0 72px;position:relative}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(600px 400px at 85% 10%,rgba(18,101,245,.22),transparent 70%),
+  linear-gradient(rgba(53,200,255,.05) 1px,transparent 1px) 0 0/48px 48px,
+  linear-gradient(90deg,rgba(53,200,255,.05) 1px,transparent 1px) 0 0/48px 48px;
+  -webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:48px;align-items:center;position:relative}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;letter-spacing:-.02em;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(40px,6.4vw,74px);line-height:1;font-weight:800;letter-spacing:-.035em}
+h1 .line{display:block}
+h1 .line+.line{color:transparent;-webkit-text-stroke:1.5px var(--ice)}
+.lede{max-width:52ch;color:var(--fog);font-size:18px;margin:22px 0 30px}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.facts{margin:36px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--fog);font-size:15px}
+.facts li{display:flex;align-items:center;gap:8px}
+.facts li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--signal);transform:rotate(45deg)}
+
+/* Drop planner demo */
+.planner{background:var(--deck);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 30px 80px -30px rgba(18,101,245,.45)}
+.planner-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 6px 12px}
+.planner-head h2{font-size:16px;letter-spacing:0}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--fog);cursor:pointer;user-select:none}
+.toggle input{appearance:none;width:34px;height:20px;border-radius:20px;background:var(--line);position:relative;cursor:pointer;margin:0;transition:background-color .15s var(--ease-out)}
+.toggle input::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .15s var(--ease-out)}
+.toggle input:checked{background:var(--signal)}
+.toggle input:checked::after{transform:translateX(14px)}
+.map-wrap{position:relative;border-radius:14px;overflow:hidden;background:#050912;contain:layout paint}
+.map{width:100%;height:auto;aspect-ratio:4/3}
+.poi{cursor:pointer;outline:none}
+.poi .hex{fill:var(--deck-2);stroke:var(--ice);stroke-width:2;transition:fill .15s var(--ease-out)}
+.poi .lbl{fill:var(--fog);font:600 13px var(--body);pointer-events:none}
+.poi:hover .hex,.poi:focus-visible .hex{fill:#1d3a66}
+.poi:focus-visible .hex{stroke:#fff;stroke-width:3}
+.poi[aria-pressed="true"] .hex{fill:var(--signal);stroke:#fff}
+.poi[aria-pressed="true"] .lbl{fill:#fff}
+.zone{transition:opacity .25s var(--ease-out)}
+.zone.off{opacity:0}
+.trail{fill:none;stroke:var(--ice);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}
+.land{transform-box:fill-box;transform-origin:center}
+.pulse{fill:none;stroke:var(--ice);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pulse 2.2s var(--ease-out) infinite}
+@keyframes pulse{from{transform:scale(.6);opacity:.9}to{transform:scale(2.4);opacity:0}}
+.poi-card{display:grid;grid-template-columns:1fr auto;gap:6px 16px;padding:14px 8px 4px}
+.poi-card h3{font-size:18px}
+.poi-card .note{grid-column:1/-1;margin:0;color:var(--fog);font-size:15px;min-height:3.3em}
+.meters{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0}
+.meter span{display:block;font-size:13px;color:var(--fog);margin-bottom:5px}
+.meter i{display:flex;gap:3px}
+.meter i b{flex:1;height:7px;border-radius:2px;background:var(--line);transition:background-color .2s var(--ease-out)}
+.meter i b.on{background:var(--ice)}
+.meter.risk i b.on{background:var(--amber)}
+.demo-note{grid-column:1/-1;font-size:13px;color:#7187a8;margin:4px 0 0}
+
+/* ---------- Sections ---------- */
+section{scroll-margin-top:76px}
+.band{padding:96px 0;content-visibility:auto;contain-intrinsic-size:auto 900px}
+.band-head{max-width:640px;margin-bottom:48px}
+.band-head h2{font-size:clamp(28px,3.6vw,42px);line-height:1.1}
+.band-head p{color:var(--fog);font-size:18px;margin:16px 0 0}
+
+/* Match day steps */
+.steps-bar{position:relative;margin:0 0 56px;z-index:5}
+.steps-track{position:absolute;left:12.5%;right:12.5%;top:21px;height:2px;background:var(--line);overflow:hidden}
+.steps-fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--signal),var(--ice));transform-origin:left center}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);position:relative;counter-reset:step}
+.steps li{position:relative;text-align:center;counter-increment:step}
+.steps a{display:inline-flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:var(--fog);font-weight:600;padding:0 6px 6px;border-radius:10px;transition:color .15s var(--ease-out)}
+.steps a::before{content:counter(step);width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:var(--night);border:2px solid var(--signal);color:var(--text);font:700 15px var(--display);transition:background-color .15s var(--ease-out),transform .15s var(--ease-out)}
+.steps a:hover,.steps a.active{color:var(--text)}
+.steps a:hover::before{transform:scale(1.06)}
+.steps a.active::before{background:var(--signal);border-color:var(--ice)}
+
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center;padding:56px 0;border-top:1px solid var(--line-soft);scroll-margin-top:80px}
+@media (min-width:901px){
+  /* the match-day bar stays in view while the four steps scroll past */
+  .steps-bar{position:sticky;top:68px;padding:14px 0 16px;background:var(--night)}
+  .feature{scroll-margin-top:190px}
+}
+.feature:nth-of-type(even) .art{order:2}
+.feature h3{font-size:clamp(24px,2.6vw,32px);line-height:1.15;margin:6px 0 14px}
+.feature .kicker{color:var(--ice);font-weight:700;font-size:15px}
+.feature p{color:var(--fog);margin:0 0 18px;max-width:56ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.chips li{font-size:14px;color:var(--text);background:var(--deck);border:1px solid var(--line);padding:5px 11px;border-radius:999px}
+.art{background:var(--deck);border:1px solid var(--line);border-radius:20px;overflow:hidden;aspect-ratio:4/3;contain:layout paint}
+.art svg{width:100%;height:100%}
+
+/* reveal: draw-in once when visible */
+.draw{stroke-dasharray:1;stroke-dashoffset:1}
+.art.in .draw{animation:draw .9s var(--ease-out) forwards}
+.art.in .draw.d2{animation-delay:.15s}.art.in .draw.d3{animation-delay:.3s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.fade{opacity:0}
+.art.in .fade{animation:fade .35s var(--ease-out) forwards}
+.art.in .fade.d2{animation-delay:.2s}.art.in .fade.d3{animation-delay:.4s}.art.in .fade.d4{animation-delay:.55s}
+@keyframes fade{to{opacity:1}}
+.float{transform-box:fill-box;transform-origin:center}
+.art.in .float{animation:float 5s var(--ease-in-out) infinite alternate}
+.art.in .float.f2{animation-delay:-1.6s}.art.in .float.f3{animation-delay:-3.2s}
+@keyframes float{from{transform:translateY(-4px)}to{transform:translateY(4px)}}
+.playhead{transform-box:view-box}
+.art.in .playhead{animation:scrub 6s var(--ease-in-out) infinite alternate}
+@keyframes scrub{from{transform:translateX(0)}to{transform:translateX(300px)}}
+.hit{transform-box:fill-box;transform-origin:center}
+.art.in .hit{animation:hit 2.6s var(--ease-out) infinite}
+.art.in .hit.h2{animation-delay:1.3s}
+@keyframes hit{0%,60%{transform:scale(1);opacity:1}70%{transform:scale(1.25);opacity:.4}100%{transform:scale(1);opacity:1}}
+.paused,.paused *{animation-play-state:paused!important}
+
+/* Tracks */
+.tracks{display:grid;gap:10px;margin:0 0 20px;padding:0;list-style:none}
+.tracks li{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 14px;border-left:3px solid var(--signal);background:linear-gradient(90deg,rgba(18,101,245,.10),transparent)}
+.tracks b{font-weight:700}
+.tracks span{color:var(--fog);font-size:15px}
+
+/* Warmup */
+.routine{background:var(--deck);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 18px}
+.routine-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.clock{font:700 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.clock small{display:block;font:500 14px/1.4 var(--body);color:var(--fog);margin-top:6px}
+.routine ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.routine li label{display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background-color .15s var(--ease-out)}
+.routine li label:hover{background:var(--deck-2)}
+.routine li.current label{background:var(--deck-2);box-shadow:inset 3px 0 0 var(--ice)}
+.routine input{appearance:none;width:20px;height:20px;border:2px solid var(--line);border-radius:6px;margin:0;display:grid;place-items:center;cursor:pointer;transition:background-color .15s var(--ease-out),border-color .15s var(--ease-out)}
+.routine input:checked{background:var(--signal);border-color:var(--signal)}
+.routine input:checked::after{content:"";width:10px;height:6px;border:2px solid #fff;border-top:0;border-right:0;transform:translate(0,-1px) rotate(-45deg)}
+.routine li.done span:first-of-type{text-decoration:line-through;color:var(--fog)}
+.routine .min{color:var(--fog);font-size:14px;font-variant-numeric:tabular-nums}
+.routine .opt{font-size:13px;color:var(--fog)}
+.routine-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.small{font-size:13px;color:#7187a8;margin:10px 0 0}
+#ringProgress{transition:stroke-dashoffset .4s var(--ease-out)}
+
+/* VOD rating */
+.rate{background:var(--deck);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 18px}
+.rate-row{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:12px;padding:6px 0}
+.rate-row span{font-weight:600}
+.stars{display:flex;gap:4px}
+.stars button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--fog);font:700 14px var(--body);cursor:pointer;transition:background-color .15s var(--ease-out),border-color .15s var(--ease-out),transform .1s var(--ease-out)}
+.stars button:hover{border-color:var(--ice)}
+.stars button:active{transform:scale(.94)}
+.stars button[aria-pressed="true"]{background:var(--signal);border-color:var(--signal);color:#fff}
+.verdict{margin:12px 0 0;padding:12px 14px;border-radius:10px;background:var(--deck-2);color:var(--text);font-size:15px;min-height:48px}
+
+/* Community */
+.community{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:48px;align-items:center}
+.links{list-style:none;margin:0 0 20px;padding:0;display:grid;gap:10px}
+.links a{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:var(--deck);border:1px solid var(--line);text-decoration:none;transition:border-color .15s var(--ease-out),transform .15s var(--ease-out)}
+.links a:hover{border-color:var(--ice);transform:translateX(4px)}
+.links svg{width:22px;height:22px}
+.links .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--deck-2);color:var(--ice)}
+.links b{display:block;font-weight:700}
+.links small{color:var(--fog);font-size:14px}
+.links .go{color:var(--fog);font-size:14px}
+
+/* Data */
+.ledger{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ledger article{background:var(--deck);border:1px solid var(--line);border-radius:18px;padding:28px}
+.ledger h3{font-size:21px;margin:0 0 10px}
+.ledger p{color:var(--fog);margin:0 0 18px}
+.ledger ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ledger li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:15px}
+.ledger li::before{content:"";width:16px;height:16px;margin-top:4px;border-radius:50%;border:2px solid var(--fog)}
+.ledger li.yes::before{border-color:var(--ice);background:radial-gradient(circle,var(--ice) 35%,transparent 40%)}
+.ledger li.no::before{border-color:var(--amber);background:linear-gradient(45deg,transparent 45%,var(--amber) 45%,var(--amber) 55%,transparent 55%)}
+.disclaimer{margin:24px 0 0;padding:14px 18px;border-left:3px solid var(--amber);background:rgba(230,170,56,.08);border-radius:0 10px 10px 0;color:var(--fog);font-size:15px}
+
+/* FAQ */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.faq details{background:var(--deck);border:1px solid var(--line);border-radius:14px}
+.faq summary{list-style:none;cursor:pointer;padding:18px 52px 18px 20px;font-weight:700;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";position:absolute;right:22px;top:50%;width:10px;height:10px;border-right:2px solid var(--ice);border-bottom:2px solid var(--ice);transform:translateY(-70%) rotate(45deg);transition:transform .2s var(--ease-out)}
+.faq details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+.faq details p{margin:0;padding:0 20px 18px;color:var(--fog)}
+
+/* CTA + footer */
+.cta{padding:56px;border-radius:24px;background:linear-gradient(120deg,#102c58,#0b172b 70%);border:1px solid #244878;display:flex;justify-content:space-between;align-items:center;gap:24px;position:relative;overflow:hidden}
+.cta h2{font-size:clamp(26px,3vw,36px)}
+.cta p{color:#aabbd4;margin:10px 0 0}
+.cta-actions{display:flex;flex-wrap:wrap;gap:10px;position:relative}
+footer{border-top:1px solid var(--line-soft);padding:28px 0;color:#7c90ae;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}
+footer a{color:var(--fog);text-decoration:none}
+footer a:hover{color:var(--text)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);opacity:0;background:var(--text);color:var(--night);padding:12px 18px;border-radius:10px;font-weight:700;font-size:15px;pointer-events:none;z-index:90;transition:opacity .2s var(--ease-out),transform .2s var(--ease-out)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.to-top{position:fixed;right:18px;bottom:18px;width:46px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--deck);color:var(--text);display:grid;place-items:center;cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;z-index:40;transition:opacity .2s var(--ease-out),transform .2s var(--ease-out),border-color .15s var(--ease-out)}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+.to-top:hover{border-color:var(--ice)}
+
+/* Hero load sequence: the single orchestrated moment */
+/* headline + lede stay visible from the first paint (LCP); only secondary elements rise in */
+.intro .actions,.intro .facts{opacity:0;transform:translateY(10px);animation:rise .45s var(--ease-out) .08s forwards}
+.intro .facts{animation-delay:.16s}
+.intro .planner{opacity:0;transform:translateY(16px);animation:rise .6s var(--ease-out) .1s forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* ---------- Smooth transitions ----------
+   Tuning: reveal distance = translateY(28px), reveal duration = .8s,
+   stagger = 80ms (JS: STAGGER), scrub smoothing = .12s (JS: smooth).
+   Everything below only applies once JS adds .js-motion (no JS = all visible). */
+.js-motion .rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease-soft),transform .8s var(--ease-soft);transition-delay:var(--d,0s)}
+.js-motion .rv.rv-in{opacity:1;transform:none}
+.faq details[open] p{animation:faqIn .3s var(--ease-out)}
+@keyframes faqIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.28s;animation-timing-function:var(--ease-in-out)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .hero .wrap,.feature,.community,.ledger,.faq{grid-template-columns:1fr}
+  .feature{gap:28px}
+  .feature:nth-of-type(even) .art{order:0}
+  .hero{padding:40px 0 56px}
+  .cta{flex-direction:column;align-items:flex-start;padding:32px}
+}
+@media (max-width:640px){
+  .steps-track{display:none}
+  .nav{display:none}
+  .top .wrap{min-height:60px;gap:10px}
+  .brand b{font-size:13px}
+  .btn-discord-label{display:none}
+  .band{padding:64px 0}
+  .steps{grid-template-columns:repeat(2,1fr);row-gap:22px}
+  .meters{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .tracks li{grid-template-columns:1fr;gap:2px}
+  .rate-row{grid-template-columns:1fr}
+  .stars button{width:40px;height:40px}
+  .lede{font-size:17px}
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .pulse,.art .float,.art .playhead,.art .hit{animation:none!important}
+  .draw{stroke-dashoffset:0}.fade{opacity:1}
+  .js-motion .rv{opacity:1;transform:none;transition:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+}
+</style>
+</head>
+<body class="intro">
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="AERIX DROPS home">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 96 91 70 91 59 70 37 70 25 91 2 91 42 15Z" fill="#1265f5"/><path d="M50 34 39 57 62 57Z" fill="#070b13"/><path d="M34 66 67 60 72 72 28 80Z" fill="#35c8ff"/></svg>
+      <b>AERIX <span>DROPS</span></b>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#loop" data-i18n="navLoop">Features</a>
+      <a href="#community" data-i18n="navCommunity">Community</a>
+      <a href="#data" data-i18n="navData">Data</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="lang" id="langBtn" type="button" aria-label="Deutsch anzeigen">DE</button>
+    <a class="btn btn-primary btn-sm" href="https://discord.gg/rwBMs7R9y" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M19.6 5.3A17 17 0 0 0 15.4 4l-.5 1a15.7 15.7 0 0 0-5.8 0l-.5-1a17 17 0 0 0-4.2 1.3C1.7 9.4 1 13.4 1.3 17.3A17 17 0 0 0 6.5 20l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 11.4 0l.4.3a11 11 0 0 1-1.7.8l1.1 1.8a17 17 0 0 0 5.2-2.7c.4-4.5-.7-8.5-3.1-12ZM8.7 14.9c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.6 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg>
+      <span class="btn-discord-label" data-i18n="joinDiscord">Join Discord</span>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1><span class="line" data-i18n="h1a">Know the tool.</span><span class="line" data-i18n="h1b">Play smarter.</span></h1>
+      <p class="lede" data-i18n="lede">AERIX DROPS is a free, community-made companion for competitive Fortnite players. Plan your drop, warm up with structure, learn the fundamentals and review your own matches – all in one place.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#loop" data-i18n="ctaFeatures">Explore the features</a>
+        <a class="btn btn-ghost" href="#data" data-i18n="ctaData">How the data works</a>
+      </div>
+      <ul class="facts">
+        <li data-i18n="fact1">100% free</li>
+        <li data-i18n="fact2">Community-made</li>
+        <li data-i18n="fact3">Built for competitive players</li>
+      </ul>
+    </div>
+
+    <div class="planner" data-art="hero">
+      <div class="planner-head">
+        <h2 data-i18n="plannerTitle">Try the Drop Planner</h2>
+        <label class="toggle"><input type="checkbox" id="zoneToggle" checked> <span data-i18n="zone">Zone overlay</span></label>
+      </div>
+      <div class="map-wrap">
+        <svg class="map" id="map" viewBox="0 0 600 450" role="group" aria-label="Demo island map. Choose a landing spot.">
+          <defs>
+            <radialGradient id="sea" cx="55%" cy="50%" r="70%"><stop offset="0" stop-color="#0b1730"/><stop offset="1" stop-color="#04070e"/></radialGradient>
+            <linearGradient id="land" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#173563"/><stop offset="1" stop-color="#0f2547"/></linearGradient>
+            <path id="isle" d="M120 120C170 60 300 50 380 80C470 110 540 160 530 250C520 330 450 390 350 395C250 400 150 380 100 310C60 250 70 170 120 120Z"/>
+            <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#35c8ff" stroke-opacity=".07"/></pattern>
+          </defs>
+          <rect width="600" height="450" fill="url(#sea)"/>
+          <rect width="600" height="450" fill="url(#grid)"/>
+          <use href="#isle" fill="url(#land)" stroke="#2a5aa0" stroke-width="2"/>
+          <g fill="none" stroke="#35c8ff" stroke-opacity=".14">
+            <use href="#isle" transform="translate(300 235) scale(.82) translate(-300 -235)"/>
+            <use href="#isle" transform="translate(300 235) scale(.62) translate(-300 -235)"/>
+            <use href="#isle" transform="translate(300 235) scale(.4) translate(-300 -235)"/>
+          </g>
+          <path d="M380 80C360 160 300 200 290 260S230 360 200 392" fill="none" stroke="#1f6fd1" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+          <g class="zone" id="zone"><circle cx="360" cy="255" r="150" fill="rgba(53,200,255,.06)" stroke="#35c8ff" stroke-width="2" stroke-dasharray="6 6"/></g>
+          <line x1="10" y1="36" x2="590" y2="200" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+          <path id="trail" class="trail" pathLength="1" d=""/>
+          <g id="poiLayer"></g>
+          <g id="landing" class="land" opacity="0"><circle class="pulse" r="12"/><circle r="6" fill="#35c8ff"/></g>
+        </svg>
+      </div>
+      <div class="poi-card" aria-live="polite">
+        <h3 id="poiName">Old Mill</h3>
+        <span class="sr-only" data-i18n="ratedLabel">Rated on a 1–5 scale</span>
+        <div class="meters">
+          <div class="meter"><span data-i18n="mLoot">Loot</span><i id="mLoot"></i></div>
+          <div class="meter risk"><span data-i18n="mContest">Contest risk</span><i id="mContest"></i></div>
+          <div class="meter"><span data-i18n="mRotate">Rotation</span><i id="mRotate"></i></div>
+        </div>
+        <p class="note" id="poiNote"></p>
+        <p class="demo-note" data-i18n="demoNote">Demo island with example ratings. In the utility, ratings are strategic estimates – not live-match statistics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MATCH DAY LOOP ================= -->
+<section class="band" id="loop">
+  <div class="wrap">
+    <div class="band-head">
+      <h2 data-i18n="loopTitle">Your match day, start to finish</h2>
+      <p data-i18n="loopLede">AERIX DROPS has a tool for each step around a match. Pick the part you want to get better at.</p>
+    </div>
+    <nav class="steps-bar" aria-label="Match day steps">
+      <div class="steps-track" aria-hidden="true"><i class="steps-fill" id="stepsFill"></i></div>
+      <ol class="steps">
+        <li><a href="#learn" data-i18n="stepLearn">Learn</a></li>
+        <li><a href="#warmup" data-i18n="stepWarm">Warm up</a></li>
+        <li><a href="#drop" data-i18n="stepDrop">Drop</a></li>
+        <li><a href="#review" data-i18n="stepReview">Review</a></li>
+      </ol>
+    </nav>
+
+    <!-- Learn -->
+    <article class="feature" id="learn">
+      <div class="art" data-art="learn">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Three learning track cards: leadership, precision and fighting">
+          <defs><radialGradient id="lg" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#1265f5" stop-opacity=".35"/><stop offset="1" stop-color="#1265f5" stop-opacity="0"/></radialGradient></defs>
+          <rect width="400" height="300" fill="url(#lg)"/>
+          <path class="draw" pathLength="1" d="M70 250C140 270 260 270 330 250" fill="none" stroke="#35c8ff" stroke-width="2" stroke-dasharray="1"/>
+          <g class="float"><g transform="rotate(-8 95 145)"><rect x="45" y="80" width="100" height="130" rx="14" fill="#102c58" fill-opacity=".85" stroke="#35c8ff" stroke-opacity=".6"/>
+            <circle cx="95" cy="140" r="26" fill="none" stroke="#35c8ff" stroke-width="2.5"/><path d="M95 120 102 140 95 160 88 140Z" fill="#35c8ff"/></g></g>
+          <g class="float f2"><rect x="150" y="62" width="100" height="140" rx="14" fill="#13336a" fill-opacity=".9" stroke="#35c8ff"/>
+            <circle cx="200" cy="130" r="26" fill="none" stroke="#35c8ff" stroke-width="2.5"/><circle cx="200" cy="130" r="5" fill="#35c8ff"/><path d="M200 96v18M200 146v18M166 130h18M216 130h18" stroke="#35c8ff" stroke-width="2.5" stroke-linecap="round"/></g>
+          <g class="float f3"><g transform="rotate(8 305 145)"><rect x="255" y="80" width="100" height="130" rx="14" fill="#102c58" fill-opacity=".85" stroke="#35c8ff" stroke-opacity=".6"/>
+            <path d="M282 118 328 164M328 118 282 164" stroke="#35c8ff" stroke-width="3" stroke-linecap="round"/><path d="M282 118h12M282 118v12M328 118h-12M328 118v12" stroke="#35c8ff" stroke-width="3" stroke-linecap="round"/></g></g>
+          <g fill="#35c8ff"><circle class="fade" cx="95" cy="257" r="5"/><circle class="fade d2" cx="200" cy="265" r="5"/><circle class="fade d3" cx="305" cy="257" r="5"/></g>
+        </svg>
+      </div>
+      <div>
+        <span class="kicker" data-i18n="learnKicker">Learning Hub</span>
+        <h3 data-i18n="learnTitle">Build the knowledge behind good decisions</h3>
+        <p data-i18n="learnText">Focused learning tracks cover in-game leadership, fragging and fighting, supported by practical principles and checklists.</p>
+        <ul class="tracks">
+          <li><b>IGLing</b><span data-i18n="trackIgl">Calling rotations, setting the plan and keeping comms clear.</span></li>
+          <li><b>Fragging</b><span data-i18n="trackFrag">Picking the right fights and converting them into eliminations.</span></li>
+          <li><b>Fighting</b><span data-i18n="trackFight">Positioning, timing and decision-making in close fights.</span></li>
+        </ul>
+        <ul class="chips"><li>IGLing</li><li>Fragging</li><li>Fighting</li><li data-i18n="chipTips">Practice tips</li></ul>
+      </div>
+    </article>
+
+    <!-- Warm up -->
+    <article class="feature" id="warmup">
+      <div class="art" data-art="warmup">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Warmup timer ring with aim targets">
+          <g fill="none" stroke="#35c8ff" stroke-opacity=".35" stroke-width="2">
+            <circle class="hit" cx="70" cy="70" r="16"/><circle cx="70" cy="70" r="7"/>
+            <circle cx="335" cy="80" r="20"/><circle cx="335" cy="80" r="9"/>
+            <circle class="hit h2" cx="330" cy="215" r="13"/><circle cx="330" cy="215" r="5"/>
+            <circle cx="62" cy="205" r="11"/>
+          </g>
+          <circle cx="200" cy="140" r="82" fill="none" stroke="#1a2c4b" stroke-width="16"/>
+          <circle id="ringProgress" cx="200" cy="140" r="82" fill="none" stroke="#35c8ff" stroke-width="16" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-90 200 140)"/>
+          <g stroke="#0e1829" stroke-width="5"><path d="M200 50v20M290 140h-20M200 230v-20M110 140h20"/></g>
+          <text id="ringLabel" x="200" y="150" text-anchor="middle" fill="#edf4ff" font-family="Unbounded,Arial Black,sans-serif" font-size="30" font-weight="700">0%</text>
+          <g class="fade d3" fill="none" stroke="#2f7bff" stroke-width="2"><rect x="70" y="252" width="34" height="44" rx="17"/><path d="M87 252v14"/><rect x="250" y="262" width="96" height="30" rx="6"/><path d="M262 272h8M276 272h8M290 272h8M304 272h8M318 272h8M270 282h56"/></g>
+        </svg>
+      </div>
+      <div>
+        <span class="kicker" data-i18n="warmKicker">Warmup Routine</span>
+        <h3 data-i18n="warmTitle">25 minutes, then you are ready</h3>
+        <p data-i18n="warmText">A structured routine covering aim, mechanics and editing, piece control and real-fight repetitions. Track completed exercises and finish with optional Zone Wars.</p>
+        <div class="routine" id="routine">
+          <div class="routine-top">
+            <div class="clock"><span id="clock">06:00</span><small id="clockLabel">Aim</small></div>
+            <div class="routine-actions" style="margin:0">
+              <button class="btn btn-primary btn-sm" id="timerBtn" type="button" data-i18n="start">Start</button>
+              <button class="btn btn-ghost btn-sm" id="resetBtn" type="button" data-i18n="reset">Reset</button>
+            </div>
+          </div>
+          <ol id="blocks"></ol>
+          <p class="small" data-i18n="routineNote">Example split of the 25-minute routine. Your progress is saved in this browser only.</p>
+        </div>
+        <ul class="chips"><li data-i18n="chip25">25-minute routine</li><li data-i18n="chipCodes">Creative codes</li><li data-i18n="chipProgress">Progress tracking</li><li>Zone Wars</li></ul>
+      </div>
+    </article>
+
+    <!-- Drop -->
+    <article class="feature" id="drop">
+      <div class="art" data-art="planner">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Tactical island map with a planned loot route">
+          <rect width="400" height="300" fill="#060b16"/>
+          <path d="M80 80C120 40 220 35 290 60S380 130 360 200 260 280 190 270 50 240 45 170 60 100 80 80Z" fill="#132c55" stroke="#2a5aa0" stroke-width="2"/>
+          <path d="M290 60C270 120 220 150 210 190S170 250 150 268" fill="none" stroke="#1f6fd1" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+          <circle class="fade" cx="230" cy="170" r="105" fill="rgba(53,200,255,.05)" stroke="#35c8ff" stroke-opacity=".5" stroke-dasharray="5 5"/>
+          <path class="draw d2" pathLength="1" d="M110 110C150 120 160 160 200 165S270 150 300 190" fill="none" stroke="#35c8ff" stroke-width="3" stroke-dasharray="1" stroke-linecap="round"/>
+          <g fill="#0e1829" stroke="#35c8ff" stroke-width="2">
+            <polygon class="fade" points="110,99 120,104.5 120,115.5 110,121 100,115.5 100,104.5"/>
+            <polygon class="fade d2" points="200,154 210,159.5 210,170.5 200,176 190,170.5 190,159.5"/>
+            <polygon class="fade d3" points="300,179 310,184.5 310,195.5 300,201 290,195.5 290,184.5"/>
+            <polygon points="250,79 260,84.5 260,95.5 250,101 240,95.5 240,84.5" stroke-opacity=".5"/>
+            <polygon points="130,219 140,224.5 140,235.5 130,241 120,235.5 120,224.5" stroke-opacity=".5"/>
+          </g>
+          <circle class="fade d4" cx="250" cy="90" r="5" fill="#e6aa38"/>
+        </svg>
+      </div>
+      <div>
+        <span class="kicker" data-i18n="dropKicker">Drop Planner</span>
+        <h3 data-i18n="dropTitle">Land with a plan, not a guess</h3>
+        <p data-i18n="dropText">Explore the map, assess landing spots and plan your early-game route. Build custom drop plans and organise loot paths and rotations around your team's strategy.</p>
+        <ul class="chips" style="margin-bottom:20px"><li data-i18n="chipPoi">POI assessments</li><li data-i18n="chipLoot">Loot routes</li><li data-i18n="chipGame">Custom gameplans</li><li data-i18n="chipZone">Zone overlay</li></ul>
+        <a class="btn btn-ghost btn-sm" href="#top" data-i18n="tryDemo">Try the demo map</a>
+      </div>
+    </article>
+
+    <!-- Review -->
+    <article class="feature" id="review">
+      <div class="art" data-art="vod">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Video review timeline with marked frames and a note">
+          <rect x="30" y="26" width="340" height="150" rx="12" fill="#0a1426" stroke="#22324d"/>
+          <circle cx="200" cy="101" r="22" fill="none" stroke="#35c8ff" stroke-opacity=".6" stroke-width="2"/><path d="M193 90v22l18-11Z" fill="#35c8ff" fill-opacity=".8"/>
+          <g fill="#13213a" stroke="#22324d">
+            <rect x="30" y="196" width="50" height="34" rx="5"/><rect x="88" y="196" width="50" height="34" rx="5"/><rect x="146" y="196" width="50" height="34" rx="5"/>
+            <rect x="204" y="196" width="50" height="34" rx="5"/><rect x="262" y="196" width="50" height="34" rx="5"/><rect x="320" y="196" width="50" height="34" rx="5"/>
+          </g>
+          <g fill="none" stroke="#35c8ff" stroke-width="2.5"><rect class="fade" x="88" y="196" width="50" height="34" rx="5"/><rect class="fade d2" x="204" y="196" width="50" height="34" rx="5"/><rect class="fade d3" x="320" y="196" width="50" height="34" rx="5"/></g>
+          <rect x="30" y="242" width="340" height="4" rx="2" fill="#22324d"/>
+          <g class="playhead"><rect x="40" y="186" width="3" height="66" rx="1.5" fill="#1265f5"/><circle cx="41.5" cy="244" r="6" fill="#1265f5"/></g>
+          <g class="fade d4"><rect x="220" y="120" width="150" height="66" rx="9" fill="#102c58" stroke="#35c8ff" stroke-opacity=".6"/>
+            <rect x="232" y="132" width="100" height="6" rx="3" fill="#9aacc7" fill-opacity=".6"/><rect x="232" y="146" width="122" height="6" rx="3" fill="#9aacc7" fill-opacity=".4"/>
+            <g fill="#35c8ff"><circle cx="236" cy="170" r="4"/><circle cx="249" cy="170" r="4"/><circle cx="262" cy="170" r="4"/><circle cx="275" cy="170" r="4" fill-opacity=".3"/><circle cx="288" cy="170" r="4" fill-opacity=".3"/></g></g>
+        </svg>
+      </div>
+      <div>
+        <span class="kicker" data-i18n="vodKicker">VOD Review</span>
+        <h3 data-i18n="vodTitle">Turn your recordings into a coaching report</h3>
+        <p data-i18n="vodText">Work through your own gameplay recordings locally. Extract timestamped frames, add match notes and rate key phases to create a structured review for coaching and improvement.</p>
+        <div class="rate" id="rate">
+          <div id="rateRows"></div>
+          <p class="verdict" id="verdict" aria-live="polite" data-i18n="verdictEmpty">Rate each phase of your last match to see where to focus next.</p>
+          <div class="routine-actions"><button class="btn btn-ghost btn-sm" id="copyReport" type="button" data-i18n="copyReport">Copy summary</button></div>
+        </div>
+        <ul class="chips"><li data-i18n="chipLocal">Local processing</li><li data-i18n="chipFrames">Frame extraction</li><li data-i18n="chipNotes">Match notes</li><li data-i18n="chipReport">Coaching report</li></ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= COMMUNITY ================= -->
+<section class="band" id="community">
+  <div class="wrap community">
+    <div class="art" data-art="community" style="aspect-ratio:16/11">
+      <svg viewBox="0 0 400 275" role="img" aria-label="Network of connected players">
+        <defs><radialGradient id="cg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1265f5" stop-opacity=".4"/><stop offset="1" stop-color="#1265f5" stop-opacity="0"/></radialGradient></defs>
+        <rect width="400" height="275" fill="url(#cg)"/>
+                <g stroke="#35c8ff" stroke-opacity=".3" stroke-width="1.2">
+          <path d="M200 138 110 70M200 138 300 62M200 138 320 200M200 138 90 205M110 70 40 110M110 70 150 25M300 62 360 110M300 62 250 20M320 200 370 250M320 200 250 245M90 205 30 240M90 205 150 255M40 110 90 205M360 110 320 200"/>
+        </g>
+        <g fill="#35c8ff"><circle cx="40" cy="110" r="4"/><circle cx="150" cy="25" r="3"/><circle cx="360" cy="110" r="4"/><circle cx="250" cy="20" r="3"/><circle cx="370" cy="250" r="3"/><circle cx="250" cy="245" r="4"/><circle cx="30" cy="240" r="3"/><circle cx="150" cy="255" r="3"/></g>
+        <g fill="#102c58" stroke="#35c8ff" stroke-width="2">
+          <circle class="float" cx="110" cy="70" r="20"/><circle class="float f2" cx="300" cy="62" r="20"/><circle class="float f3" cx="320" cy="200" r="20"/><circle cx="90" cy="205" r="14"/>
+        </g>
+        <path d="M101 63h18v10h-10l-5 5v-5h-3Z" fill="#35c8ff"/>
+        <path d="M300 71c-9-6-12-10-9-14 2-3 6-2 9 1 3-3 7-4 9-1 3 4 0 8-9 14Z" fill="#35c8ff"/>
+        <path d="M313 207h14l-2-3v-6a5 5 0 0 0-10 0v6Zm5 2h4a2 2 0 0 1-4 0Z" fill="#35c8ff"/>
+        <circle class="pulse" cx="200" cy="138" r="26"/>
+        <circle cx="200" cy="138" r="26" fill="#1265f5"/>
+        <path d="M200 120 216 152H209L206 146H194L191 152H184Z" fill="#fff"/><path d="M200 131 196 140H204Z" fill="#1265f5"/>
+      </svg>
+    </div>
+    <div>
+      <h2 style="font-size:clamp(28px,3.6vw,42px);line-height:1.1" data-i18n="commTitle">Built with the community</h2>
+      <p style="color:var(--fog);font-size:18px;margin:16px 0 26px" data-i18n="commText">Follow announcements, share feedback and report bugs. Creators, teams, organisations and brands can reach out here to talk about partnerships.</p>
+      <ul class="links">
+        <li><a href="https://discord.gg/rwBMs7R9y" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 5.3A17 17 0 0 0 15.4 4l-.5 1a15.7 15.7 0 0 0-5.8 0l-.5-1a17 17 0 0 0-4.2 1.3C1.7 9.4 1 13.4 1.3 17.3A17 17 0 0 0 6.5 20l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 11.4 0l.4.3a11 11 0 0 1-1.7.8l1.1 1.8a17 17 0 0 0 5.2-2.7c.4-4.5-.7-8.5-3.1-12ZM8.7 14.9c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.6 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span><span><b>Discord</b><small data-i18n="discordSub">Feedback, bug reports and updates</small></span><span class="go" data-i18n="open">Open</span></a></li>
+        <li><a href="https://x.com/AERIX_DROPS" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8ZM16.7 19.2h1.7L7.4 4.7H5.6Z"/></svg></span><span><b>X</b><small>@AERIX_DROPS</small></span><span class="go" data-i18n="open">Open</span></a></li>
+        <li><a href="https://www.tiktok.com/@aerix_drops" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3c.4 2.2 1.8 3.7 4 4v3.1a7.3 7.3 0 0 1-4-1.3v6.4A5.8 5.8 0 1 1 10.8 9.4v3.2a2.7 2.7 0 1 0 2.7 2.6V3Z"/></svg></span><span><b>TikTok</b><small>@aerix_drops</small></span><span class="go" data-i18n="open">Open</span></a></li>
+      </ul>
+      <button class="btn btn-ghost btn-sm" id="copyInvite" type="button" data-i18n="copyInvite">Copy Discord invite</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DATA ================= -->
+<section class="band" id="data">
+  <div class="wrap">
+    <div class="band-head">
+      <h2 data-i18n="dataTitle">What the utility uses – and what it doesn't claim</h2>
+      <p data-i18n="dataLede">We want players to understand where the information comes from before they rely on it.</p>
+    </div>
+    <div class="ledger">
+      <article>
+        <h3 data-i18n="vodDataTitle">VOD Review: your footage stays local</h3>
+        <p data-i18n="vodDataText">The VOD Review works with gameplay videos you select. It extracts timestamped screenshots on your device and lets you add observations and ratings.</p>
+        <ul>
+          <li class="yes" data-i18n="v1">No video upload is required.</li>
+          <li class="yes" data-i18n="v2">No server or API key is required.</li>
+          <li class="no" data-i18n="v3">It does not automatically interpret gameplay like a vision AI model.</li>
+          <li class="no" data-i18n="v4">It does not read official Fortnite replay data.</li>
+        </ul>
+      </article>
+      <article>
+        <h3 data-i18n="mapDataTitle">Maps and strategy: estimates, not official stats</h3>
+        <p data-i18n="mapDataText">Drop locations use the map image and POI information built into the utility. POI ratings, route suggestions and zone guidance are strategic estimates based on map notes and general competitive principles.</p>
+        <ul>
+          <li class="no" data-i18n="m1">POI ratings are not verified live-match statistics.</li>
+          <li class="no" data-i18n="m2">Loot paths and rotations are planning suggestions.</li>
+          <li class="no" data-i18n="m3">Zone guidance is not a guaranteed prediction of future circles.</li>
+          <li class="yes" data-i18n="m4">You can create your own gameplans.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="disclaimer" data-i18n="disclaimer">AERIX DROPS is a fan-made community project and is not affiliated with or endorsed by Epic Games.</p>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="band" id="faq">
+  <div class="wrap">
+    <div class="band-head"><h2 data-i18n="faqTitle">Frequently asked questions</h2></div>
+    <div class="faq">
+      <details><summary data-i18n="q1">Is AERIX DROPS free?</summary><p data-i18n="a1">Yes. AERIX DROPS is designed as a free competitive utility for Fortnite players.</p></details>
+      <details><summary data-i18n="q2">Does AERIX DROPS belong to Epic Games?</summary><p data-i18n="a2">No. It is a fan-made community project and is not affiliated with Epic Games.</p></details>
+      <details><summary data-i18n="q3">Does VOD Review automatically analyse my gameplay?</summary><p data-i18n="a3">No. The current offline workflow extracts video frames locally. You inspect the evidence, add notes and rate gameplay phases yourself.</p></details>
+      <details><summary data-i18n="q4">Are POI ratings official Fortnite statistics?</summary><p data-i18n="a4">No. They are strategic estimates based on the map information included with the utility, not verified live-match or tournament statistics.</p></details>
+      <details><summary data-i18n="q5">Can I suggest features or report issues?</summary><p data-i18n="a5">Yes. Join the Discord community and share feedback, suggestions or bug reports with the AERIX DROPS team.</p></details>
+      <details><summary data-i18n="q6">How can I become a partner?</summary><p data-i18n="a6">AERIX DROPS is open to connecting with creators, teams, organisations and brands in the Fortnite community. Reach out through the community channels to start a conversation.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="padding-top:0">
+  <div class="wrap">
+    <div class="cta">
+      <div>
+        <h2 data-i18n="ctaTitle">Be part of AERIX DROPS</h2>
+        <p data-i18n="ctaText">Get updates, share feedback and connect with competitive Fortnite players.</p>
+      </div>
+      <div class="cta-actions"><a class="btn btn-primary" href="https://discord.gg/rwBMs7R9y" target="_blank" rel="noopener" data-i18n="joinDiscord2">Join our Discord</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> AERIX DROPS. <span data-i18n="footer">Community-made project.</span></span>
+    <nav aria-label="Footer">
+      <a href="https://x.com/AERIX_DROPS" target="_blank" rel="noopener">X</a>
+      <a href="https://www.tiktok.com/@aerix_drops" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://discord.gg/rwBMs7R9y" target="_blank" rel="noopener">Discord</a>
+      <a href="#top" data-i18n="backTop">Back to top</a>
+    </nav>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var store={get:function(k){try{return JSON.parse(localStorage.getItem("aerix:"+k))}catch(e){return null}},set:function(k,v){try{localStorage.setItem("aerix:"+k,JSON.stringify(v))}catch(e){}}};
+var INVITE="https://discord.gg/rwBMs7R9y";
+$("#year").textContent=new Date().getFullYear();
+setTimeout(function(){document.body.classList.remove("intro")},1400);
+
+/* ---------- i18n ---------- */
+var DE={skip:"Zum Inhalt springen",navLoop:"Features",navCommunity:"Community",navData:"Daten",joinDiscord:"Discord beitreten",
+h1a:"Kenne das Tool.",h1b:"Spiel klüger.",
+lede:"AERIX DROPS ist ein kostenloser, von der Community entwickelter Begleiter für Competitive-Fortnite-Spieler. Plane deinen Drop, wärm dich strukturiert auf, lerne die Grundlagen und analysiere deine eigenen Matches – alles an einem Ort.",
+ctaFeatures:"Features entdecken",ctaData:"So funktionieren die Daten",fact1:"100 % kostenlos",fact2:"Von der Community",fact3:"Für Competitive-Spieler gebaut",
+plannerTitle:"Drop Planner ausprobieren",zone:"Zone anzeigen",ratedLabel:"Bewertet auf einer Skala von 1 bis 5",mLoot:"Loot",mContest:"Kampfrisiko",mRotate:"Rotation",
+demoNote:"Demo-Insel mit Beispielwerten. In der Utility sind Bewertungen strategische Einschätzungen – keine Live-Match-Statistiken.",
+loopTitle:"Dein Spieltag – von Anfang bis Ende",loopLede:"AERIX DROPS hat für jeden Schritt rund um ein Match ein Werkzeug. Such dir aus, worin du besser werden willst.",
+stepLearn:"Lernen",stepWarm:"Aufwärmen",stepDrop:"Droppen",stepReview:"Auswerten",
+learnKicker:"Learning Hub",learnTitle:"Das Wissen hinter guten Entscheidungen",learnText:"Fokussierte Lernpfade zu In-Game-Leadership, Fragging und Fighting – mit praktischen Prinzipien und Checklisten.",
+trackIgl:"Rotationen ansagen, den Plan festlegen und klar kommunizieren.",trackFrag:"Die richtigen Kämpfe wählen und in Eliminierungen umwandeln.",trackFight:"Positionierung, Timing und Entscheidungen im Nahkampf.",chipTips:"Trainingstipps",
+warmKicker:"Warmup Routine",warmTitle:"25 Minuten, dann bist du bereit",warmText:"Eine strukturierte Routine für Aim, Mechanics und Editing, Piece Control und echte Kampf-Wiederholungen. Hake erledigte Übungen ab und schließ optional mit Zone Wars ab.",
+start:"Start",pause:"Pause",resume:"Weiter",reset:"Zurücksetzen",routineNote:"Beispielhafte Aufteilung der 25-Minuten-Routine. Dein Fortschritt wird nur in diesem Browser gespeichert.",
+chip25:"25-Minuten-Routine",chipCodes:"Creative-Codes",chipProgress:"Fortschritt verfolgen",
+dropKicker:"Drop Planner",dropTitle:"Lande mit Plan statt mit Glück",dropText:"Erkunde die Karte, bewerte Landeplätze und plane deine Early-Game-Route. Erstelle eigene Drop-Pläne und organisiere Loot-Wege und Rotationen passend zur Strategie deines Teams.",
+chipPoi:"POI-Bewertungen",chipLoot:"Loot-Routen",chipGame:"Eigene Gameplans",chipZone:"Zonen-Overlay",tryDemo:"Demo-Karte ausprobieren",
+vodKicker:"VOD Review",vodTitle:"Aus deinen Aufnahmen wird ein Coaching-Report",vodText:"Arbeite deine eigenen Gameplay-Aufnahmen lokal durch. Extrahiere Frames mit Zeitstempel, ergänze Match-Notizen und bewerte Schlüsselphasen – für ein strukturiertes Review zum Coachen und Verbessern.",
+verdictEmpty:"Bewerte jede Phase deines letzten Matches, um zu sehen, worauf du dich als Nächstes konzentrieren solltest.",copyReport:"Zusammenfassung kopieren",
+chipLocal:"Lokale Verarbeitung",chipFrames:"Frame-Extraktion",chipNotes:"Match-Notizen",chipReport:"Coaching-Report",
+commTitle:"Gemeinsam mit der Community gebaut",commText:"Verfolge Ankündigungen, gib Feedback und melde Bugs. Creator, Teams, Organisationen und Marken können sich hier für Partnerschaften melden.",
+discordSub:"Feedback, Bug-Reports und Updates",open:"Öffnen",copyInvite:"Discord-Einladung kopieren",
+dataTitle:"Was die Utility nutzt – und was sie nicht behauptet",dataLede:"Spieler sollen wissen, woher die Informationen stammen, bevor sie sich darauf verlassen.",
+vodDataTitle:"VOD Review: Deine Aufnahmen bleiben lokal",vodDataText:"Das VOD Review arbeitet mit Gameplay-Videos, die du auswählst. Es extrahiert Screenshots mit Zeitstempel auf deinem Gerät und lässt dich Beobachtungen und Bewertungen ergänzen.",
+v1:"Kein Video-Upload nötig.",v2:"Kein Server und kein API-Key nötig.",v3:"Es interpretiert Gameplay nicht automatisch wie ein Vision-KI-Modell.",v4:"Es liest keine offiziellen Fortnite-Replay-Daten aus.",
+mapDataTitle:"Karten und Strategie: Einschätzungen, keine offiziellen Statistiken",mapDataText:"Landeplätze basieren auf dem Kartenbild und den POI-Informationen in der Utility. POI-Bewertungen, Routenvorschläge und Zonen-Hinweise sind strategische Einschätzungen auf Basis von Kartennotizen und allgemeinen Competitive-Prinzipien.",
+m1:"POI-Bewertungen sind keine verifizierten Live-Match-Statistiken.",m2:"Loot-Wege und Rotationen sind Planungsvorschläge.",m3:"Zonen-Hinweise sind keine garantierte Vorhersage künftiger Kreise.",m4:"Du kannst eigene Gameplans erstellen.",
+disclaimer:"AERIX DROPS ist ein Fan-Projekt der Community und steht in keiner Verbindung zu Epic Games und wird nicht von Epic Games unterstützt.",
+faqTitle:"Häufige Fragen",q1:"Ist AERIX DROPS kostenlos?",a1:"Ja. AERIX DROPS ist als kostenlose Competitive-Utility für Fortnite-Spieler gedacht.",
+q2:"Gehört AERIX DROPS zu Epic Games?",a2:"Nein. Es ist ein Fan-Projekt der Community und steht in keiner Verbindung zu Epic Games.",
+q3:"Analysiert das VOD Review mein Gameplay automatisch?",a3:"Nein. Der aktuelle Offline-Workflow extrahiert Video-Frames lokal. Du siehst dir die Szenen an, ergänzt Notizen und bewertest die Spielphasen selbst.",
+q4:"Sind POI-Bewertungen offizielle Fortnite-Statistiken?",a4:"Nein. Es sind strategische Einschätzungen auf Basis der Karteninformationen in der Utility – keine verifizierten Live-Match- oder Turnierstatistiken.",
+q5:"Kann ich Features vorschlagen oder Fehler melden?",a5:"Ja. Tritt der Discord-Community bei und teile Feedback, Vorschläge oder Bug-Reports mit dem AERIX-DROPS-Team.",
+q6:"Wie werde ich Partner?",a6:"AERIX DROPS freut sich über Kontakt zu Creatorn, Teams, Organisationen und Marken aus der Fortnite-Community. Schreib uns über die Community-Kanäle, um ins Gespräch zu kommen.",
+ctaTitle:"Werde Teil von AERIX DROPS",ctaText:"Erhalte Updates, gib Feedback und vernetze dich mit Competitive-Fortnite-Spielern.",joinDiscord2:"Unserem Discord beitreten",
+footer:"Ein Community-Projekt.",backTop:"Nach oben"};
+var EN={pause:"Pause",resume:"Resume",start:"Start"};
+var lang="en";
+$$("[data-i18n]").forEach(function(el){EN[el.dataset.i18n]=el.innerHTML});
+function t(k){return (lang==="de"?DE:EN)[k]||EN[k]||k}
+function applyLang(l){
+  lang=l;document.documentElement.lang=l;
+  $$("[data-i18n]").forEach(function(el){var v=t(el.dataset.i18n);if(v!=null)el.innerHTML=v});
+  var b=$("#langBtn");b.textContent=l==="de"?"EN":"DE";b.setAttribute("aria-label",l==="de"?"Show English":"Deutsch anzeigen");
+  store.set("lang",l);renderPoi();renderBlocks();renderRate();updateTimerBtn();
+}
+$("#langBtn").addEventListener("click",function(){
+  var next=lang==="de"?"en":"de";
+  /* View Transition: soft cross-fade instead of a hard text swap */
+  if(document.startViewTransition&&!reduce){document.startViewTransition(function(){applyLang(next)})}else applyLang(next);
+  if(window.__motion)setTimeout(window.__motion.refresh,320);
+});
+
+/* ---------- Drop planner demo ---------- */
+var POIS=[
+ {id:"harbor",x:150,y:300,name:"Harbor Yard",s:[4,4,3],en:"Dense loot in the containers. A popular spot, so plan for an early fight.",de:"Viel Loot in den Containern. Beliebter Spot – plane einen frühen Kampf ein."},
+ {id:"pine",x:200,y:160,name:"Pine Camp",s:[2,1,3],en:"A safe start with light loot. Good for a calm early game.",de:"Sicherer Start mit wenig Loot. Gut für ein ruhiges Early Game."},
+ {id:"mill",x:300,y:232,name:"Old Mill",s:[3,3,5],en:"Central and next to the river, so rotations stay short.",de:"Zentral und direkt am Fluss – die Rotationen bleiben kurz."},
+ {id:"ridge",x:420,y:150,name:"Ridge Lab",s:[3,2,2],en:"A quiet landing, but expect a long rotation to the centre.",de:"Ruhige Landung, aber rechne mit einer langen Rotation zur Mitte."},
+ {id:"hotel",x:440,y:318,name:"Crown Hotel",s:[5,5,3],en:"Highest loot, highest risk. Commit as a full team.",de:"Bester Loot, höchstes Risiko. Nur als komplettes Team landen."}
+];
+var NS="http://www.w3.org/2000/svg",layer=$("#poiLayer"),current=POIS[2];
+function hex(x,y,r){var p=[];for(var i=0;i<6;i++){var a=Math.PI/3*i-Math.PI/2;p.push((x+r*Math.cos(a)).toFixed(1)+","+(y+r*Math.sin(a)).toFixed(1))}return p.join(" ")}
+POIS.forEach(function(p){
+  var g=document.createElementNS(NS,"g");g.setAttribute("class","poi");g.setAttribute("tabindex","0");g.setAttribute("role","button");g.setAttribute("aria-pressed","false");g.setAttribute("aria-label",p.name);g.dataset.id=p.id;
+  var h=document.createElementNS(NS,"polygon");h.setAttribute("class","hex");h.setAttribute("points",hex(p.x,p.y,13));
+  var tx=document.createElementNS(NS,"text");tx.setAttribute("class","lbl");tx.setAttribute("x",p.x);tx.setAttribute("y",p.y+31);tx.setAttribute("text-anchor","middle");tx.textContent=p.name;
+  g.appendChild(h);g.appendChild(tx);layer.appendChild(g);
+  g.addEventListener("click",function(){select(p,true)});
+  g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();select(p,true)}});
+});
+function meter(el,n){el.innerHTML="";for(var i=1;i<=5;i++){var b=document.createElement("b");if(i<=n)b.className="on";el.appendChild(b)}el.setAttribute("aria-label",n+" / 5")}
+function renderPoi(){var p=current;$("#poiName").textContent=p.name;meter($("#mLoot"),p.s[0]);meter($("#mContest"),p.s[1]);meter($("#mRotate"),p.s[2]);$("#poiNote").textContent=lang==="de"?p.de:p.en}
+var trail=$("#trail"),landing=$("#landing"),anims=[];
+function select(p,animate){
+  current=p;
+  $$(".poi",layer).forEach(function(g){g.setAttribute("aria-pressed",String(g.dataset.id===p.id))});
+  var sx=Math.max(30,Math.min(560,p.x-130)),sy=36+(sx-10)*(164/580);
+  trail.setAttribute("d","M"+sx+" "+sy.toFixed(1)+" Q "+((sx+p.x)/2-20)+" "+(Math.min(sy,p.y)-30)+" "+p.x+" "+(p.y-14));
+  landing.setAttribute("transform","translate("+p.x+" "+p.y+")");
+  anims.forEach(function(a){a.cancel()});anims=[];
+  renderPoi();
+  if(animate&&!reduce&&trail.animate){
+    anims.push(trail.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:650,easing:"cubic-bezier(0,0,.2,1)",fill:"both"}));
+    anims.push(landing.animate([{opacity:0,transform:"translate("+p.x+"px,"+(p.y-18)+"px) scale(.4)"},{opacity:1,transform:"translate("+p.x+"px,"+p.y+"px) scale(1)"}],{duration:280,delay:560,easing:"cubic-bezier(.2,.8,.3,1.2)",fill:"both"}));
+  }else{landing.setAttribute("opacity","1")}
+  landing.setAttribute("opacity","1");
+}
+select(current,true);
+$("#zoneToggle").addEventListener("change",function(e){$("#zone").classList.toggle("off",!e.target.checked)});
+
+/* ---------- Visibility: reveal once + pause loops off-screen ---------- */
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting)e.target.classList.add("in");
+    e.target.classList.toggle("paused",!e.isIntersecting);
+  })},{threshold:.2});
+  $$("[data-art]").forEach(function(el){io.observe(el)});
+}else{$$("[data-art]").forEach(function(el){el.classList.add("in")})}
+
+/* ---------- Warmup routine ---------- */
+var BLOCKS=[{k:"aim",min:6,en:"Aim training",de:"Aim-Training"},{k:"edit",min:6,en:"Mechanics and editing",de:"Mechanics und Editing"},{k:"piece",min:6,en:"Piece control",de:"Piece Control"},{k:"fight",min:7,en:"Real-fight repetitions",de:"Echte Kampf-Wiederholungen"},{k:"zw",min:0,opt:true,en:"Zone Wars",de:"Zone Wars"}];
+var TOTAL=25*60,saved=store.get("routine")||{},done=saved.done||{},idx=saved.idx||0,remain=(typeof saved.remain==="number")?saved.remain:BLOCKS[0].min*60,running=false,last=0,timerId=0;
+function fmt(s){s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function persist(){store.set("routine",{done:done,idx:idx,remain:remain})}
+function renderBlocks(){
+  var ol=$("#blocks");ol.innerHTML="";
+  BLOCKS.forEach(function(b,i){
+    var li=document.createElement("li");if(done[b.k])li.className="done";if(i===idx&&!b.opt)li.classList.add("current");
+    li.innerHTML='<label><input type="checkbox" '+(done[b.k]?"checked":"")+' data-k="'+b.k+'"><span>'+(lang==="de"?b.de:b.en)+'</span>'+(b.opt?'<span class="opt">'+(lang==="de"?"optional":"optional")+'</span>':'<span class="min">'+b.min+' min</span>')+'</label>';
+    ol.appendChild(li);
+  });
+  $("#clockLabel").textContent=idx<4?(lang==="de"?BLOCKS[idx].de:BLOCKS[idx].en):(lang==="de"?"Fertig – gut gemacht!":"Done – nice work!");
+  $("#clock").textContent=fmt(remain);updateRing();
+}
+$("#blocks").addEventListener("change",function(e){var k=e.target.dataset.k;if(!k)return;done[k]=e.target.checked;persist();renderBlocks()});
+function progress(){var sec=0;for(var i=0;i<4;i++){if(done[BLOCKS[i].k])sec+=BLOCKS[i].min*60;else if(i===idx)sec+=BLOCKS[i].min*60-remain}return Math.min(1,sec/TOTAL)}
+function updateRing(){var p=progress(),r=$("#ringProgress");r.setAttribute("stroke-dashoffset",(100-p*100).toFixed(2));r.style.opacity=p>0?1:0;$("#ringLabel").textContent=Math.round(p*100)+"%"}
+function tick(){
+  var now=performance.now();remain-=(now-last)/1000;last=now;
+  if(remain<=0){done[BLOCKS[idx].k]=true;idx++;
+    if(idx>=4){remain=0;stop();toast(lang==="de"?"Routine abgeschlossen. Viel Erfolg!":"Routine complete. Good luck out there!");}
+    else{remain=BLOCKS[idx].min*60;}
+    persist();renderBlocks();return}
+  $("#clock").textContent=fmt(remain);updateRing();
+}
+function stop(){running=false;clearInterval(timerId);updateTimerBtn();persist()}
+function updateTimerBtn(){var b=$("#timerBtn");if(!b)return;b.textContent=running?t("pause"):(remain<BLOCKS[Math.min(idx,3)].min*60&&remain>0?t("resume"):t("start"));b.disabled=idx>=4}
+$("#timerBtn").addEventListener("click",function(){
+  if(running){stop();return}
+  if(idx>=4)return;running=true;last=performance.now();timerId=setInterval(tick,250);updateTimerBtn();
+});
+$("#resetBtn").addEventListener("click",function(){stop();done={};idx=0;remain=BLOCKS[0].min*60;persist();renderBlocks();updateTimerBtn()});
+document.addEventListener("visibilitychange",function(){if(running&&!document.hidden){tick()}});
+
+/* ---------- VOD phase rating ---------- */
+var PHASES=[{k:"drop",en:"Drop",de:"Drop"},{k:"early",en:"Early game",de:"Early Game"},{k:"mid",en:"Mid game",de:"Mid Game"},{k:"end",en:"End game",de:"End Game"}];
+var ratings=store.get("ratings")||{};
+function renderRate(){
+  var box=$("#rateRows");box.innerHTML="";
+  PHASES.forEach(function(ph){
+    var row=document.createElement("div");row.className="rate-row";
+    var name=lang==="de"?ph.de:ph.en,h='<span id="ph-'+ph.k+'">'+name+'</span><div class="stars" role="group" aria-labelledby="ph-'+ph.k+'">';
+    for(var i=1;i<=5;i++)h+='<button type="button" data-k="'+ph.k+'" data-v="'+i+'" aria-pressed="'+(ratings[ph.k]===i)+'" aria-label="'+name+': '+i+' / 5">'+i+'</button>';
+    row.innerHTML=h+"</div>";box.appendChild(row);
+  });
+  verdict();
+}
+function verdict(){
+  var keys=PHASES.filter(function(p){return ratings[p.k]});var el=$("#verdict");
+  if(keys.length<PHASES.length){el.textContent=t("verdictEmpty");return}
+  var low=PHASES.slice().sort(function(a,b){return ratings[a.k]-ratings[b.k]})[0],avg=PHASES.reduce(function(s,p){return s+ratings[p.k]},0)/4;
+  var n=lang==="de"?low.de:low.en;
+  el.textContent=lang==="de"?("Durchschnitt "+avg.toFixed(1)+" / 5. Fokus fürs nächste Training: "+n+"."):("Average "+avg.toFixed(1)+" / 5. Focus for your next session: "+n+".");
+}
+$("#rateRows").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;ratings[b.dataset.k]=Number(b.dataset.v);store.set("ratings",ratings);renderRate();var nb=$('#rateRows button[data-k="'+b.dataset.k+'"][data-v="'+b.dataset.v+'"]');if(nb)nb.focus()});
+function report(){return "AERIX DROPS – "+(lang==="de"?"Match-Review":"Match review")+"\n"+PHASES.map(function(p){return (lang==="de"?p.de:p.en)+": "+(ratings[p.k]||"–")+" / 5"}).join("\n")+"\n"+$("#verdict").textContent}
+
+/* ---------- Clipboard + toast ---------- */
+var toastEl=$("#toast"),toastT=0;
+function toast(m){toastEl.textContent=m;toastEl.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){toastEl.classList.remove("show")},2200)}
+function copy(text,msg){
+  function fallback(){var ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);toast(ok?msg:(lang==="de"?"Kopieren nicht möglich – bitte manuell kopieren.":"Copy failed – please copy it manually."))}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(function(){toast(msg)},fallback)}else fallback();
+}
+$("#copyReport").addEventListener("click",function(){copy(report(),lang==="de"?"Zusammenfassung kopiert":"Summary copied")});
+$("#copyInvite").addEventListener("click",function(){copy(INVITE,lang==="de"?"Einladung kopiert":"Invite copied")});
+
+/* ---------- Scrollspy + back to top ---------- */
+var navLinks=$$(".nav a"),toTop=$("#toTop");
+if("IntersectionObserver" in window){
+  var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){navLinks.forEach(function(a){var on=a.getAttribute("href")==="#"+e.target.id;a.classList.toggle("active",on);if(on)a.setAttribute("aria-current","true");else a.removeAttribute("aria-current")})}})},{rootMargin:"-45% 0px -50% 0px"});
+  ["loop","community","data","faq"].forEach(function(id){var s=document.getElementById(id);if(s)spy.observe(s)});
+  var heroObs=new IntersectionObserver(function(es){toTop.classList.toggle("show",!es[0].isIntersecting)});heroObs.observe($("#top"));
+}
+toTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:reduce?"auto":"smooth"});$(".brand").focus({preventScroll:true})});
+
+/* ---------- Init ---------- */
+var savedLang=store.get("lang");
+applyLang(savedLang||((navigator.language||"").toLowerCase().indexOf("de")===0?"de":"en"));
+
+/* =====================================================================
+   SMOOTH TRANSITIONS – tiny scroll engine (no library)
+   Same model as GSAP ScrollTrigger "scrub": each scene maps a scroll range
+   [start,end] to progress 0..1; the drawn progress eases toward the target
+   (smooth = seconds to catch up). Only transform/opacity are written.
+   Reads (scrollY) happen first, writes after; rAF only runs while moving.
+   ===================================================================== */
+var STAGGER=0.08;
+var Motion=(function(){
+  var scenes=[],raf=0,last=0;
+  function clamp(v){return v<0?0:v>1?1:v}
+  function measure(){
+    var vh=innerHeight,sy=scrollY;
+    scenes.forEach(function(sc){var r=sc.trigger.getBoundingClientRect(),top=r.top+sy;sc.s=sc.start(top,r.height,vh);sc.e=sc.end(top,r.height,vh);if(sc.measure)sc.measure(sy,vh)});
+  }
+  function target(sc,sy){return clamp((sy-sc.s)/((sc.e-sc.s)||1))}
+  function frame(t){
+    raf=0;var dt=last?Math.min(.1,(t-last)/1000):.016;last=t;
+    var sy=scrollY,moving=false;
+    scenes.forEach(function(sc){
+      var tg=target(sc,sy),k=sc.smooth===0?1:1-Math.exp(-dt/(sc.smooth||.12)),c=sc.cur+(tg-sc.cur)*k;
+      if(Math.abs(tg-c)<.0005)c=tg;else moving=true;
+      if(c!==sc.cur){sc.cur=c;sc.apply(c)}
+    });
+    if(moving)tick();else last=0;
+  }
+  function tick(){if(!raf)raf=requestAnimationFrame(frame)}
+  addEventListener("scroll",tick,{passive:true});
+  var rt=0;function later(){clearTimeout(rt);rt=setTimeout(refresh,150)}
+  addEventListener("resize",later);
+  /* content-visibility renders sections lazily, so their height can change after load:
+     re-measure (debounced) whenever the page height changes. */
+  if("ResizeObserver" in window){var lastH=0;new ResizeObserver(function(){var h=document.body.scrollHeight;if(h!==lastH){lastH=h;later()}}).observe(document.body)}
+  function refresh(){measure();var sy=scrollY;scenes.forEach(function(sc){sc.cur=target(sc,sy);sc.apply(sc.cur)})}
+  return{
+    add:function(sc){sc.cur=0;scenes.push(sc)},
+    clear:function(){scenes.forEach(function(sc){sc.reset&&sc.reset()});scenes=[]},
+    refresh:refresh,tick:tick
+  };
+})();
+window.__motion=Motion;
+
+var desktopMQ=window.matchMedia("(min-width: 901px)"),reduceMQ=window.matchMedia("(prefers-reduced-motion: reduce)");
+var fill=$("#stepsFill"),stepLinks=$$(".steps a"),featureIds=["learn","warmup","drop","review"];
+function style(el,tf,op,p){el.style.transform=tf;if(op!=null)el.style.opacity=op;el.style.willChange=(p>0&&p<1)?"transform,opacity":""}
+function setup(){
+  Motion.clear();
+  var desktop=desktopMQ.matches,still=reduceMQ.matches;
+
+  /* Scene 1 – match-day progress: line fills while the four steps scroll past,
+     the step whose section is in the middle of the screen lights up.
+     Kept with reduced motion (it is information, not decoration) but without easing. */
+  Motion.add({trigger:$("#learn"),smooth:still?0:.12,
+    start:function(top,h,vh){return top-vh*.5},
+    end:function(){var r=$("#review").getBoundingClientRect();return r.top+scrollY+r.height-innerHeight*.5},
+    measure:function(sy,vh){this.tops=featureIds.map(function(id){return document.getElementById(id).getBoundingClientRect().top+sy});this.vh=vh},
+    apply:function(p){
+      fill.style.transform="scaleX("+p.toFixed(4)+")";
+      var mid=scrollY+this.vh*.5,active=-1;
+      (this.tops||[]).forEach(function(t,i){if(t<=mid)active=i});
+      if(p>=1)active=3;
+      if(active!==this.active){this.active=active;stepLinks.forEach(function(a,i){a.classList.toggle("active",i===active)})}
+    },
+    reset:function(){fill.style.transform="";this.active=-2;stepLinks.forEach(function(a){a.classList.remove("active")})}
+  });
+  if(still)return;
+
+  if(desktop){
+    /* Scene 2 – hero hand-off: the copy drifts up and fades a little,
+       the planner lags behind (subtle parallax, small offsets only). */
+    var hero=$("#top"),copy=$(".hero-copy"),planner=$(".planner");
+    Motion.add({trigger:hero,start:function(top){return top},end:function(top,h){return top+h*.9},
+      apply:function(p){style(copy,"translate3d(0,"+(-70*p).toFixed(1)+"px,0)",(1-.75*p).toFixed(3),p);style(planner,"translate3d(0,"+(40*p).toFixed(1)+"px,0)",null,p)},
+      reset:function(){style(copy,"","");style(planner,"","")}});
+
+    /* Scene 3 – artwork rises into place: 64px → 0 and fades up as it enters.
+       Translate only (no scale), so the detailed SVGs are never re-rasterised mid-scroll. */
+    $$(".feature, .community").forEach(function(sec){
+      var art=$(".art",sec);if(!art)return;
+      Motion.add({trigger:sec,start:function(top,h,vh){return top-vh},end:function(top,h,vh){return top-vh*.35},
+        apply:function(p){var e=1-Math.pow(1-p,3);style(art,"translate3d(0,"+(64*(1-e)).toFixed(1)+"px,0)",(.3+.7*e).toFixed(3),p)},
+        reset:function(){style(art,"","")}});
+    });
+
+    /* Scene 4 – closing call to action rises into place. */
+    var cta=$(".cta");
+    Motion.add({trigger:cta.parentNode,start:function(top,h,vh){return top-vh},end:function(top,h,vh){return top-vh*.45},
+      apply:function(p){var e=1-Math.pow(1-p,3);style(cta,"translate3d(0,"+(48*(1-e)).toFixed(1)+"px,0)",(.4+.6*e).toFixed(3),p)},
+      reset:function(){style(cta,"","")}});
+  }
+}
+
+/* Scene 5 – staggered reveal: headings and text glide up 28px and fade in, once. */
+/* whole text columns reveal as one unit (fewer layers animating at once); small groups stagger */
+var revealSets=[".band-head > *",".feature > div:not(.art)",".community > div:not(.art)",".ledger article",".disclaimer",".faq details"];
+function setupReveal(){
+  if(reduceMQ.matches||!("IntersectionObserver" in window))return;
+  document.documentElement.classList.add("js-motion");
+  var groups=new Map();
+  revealSets.forEach(function(sel){$$(sel).forEach(function(el){
+    el.classList.add("rv");var g=el.parentNode,i=groups.get(g)||0;groups.set(g,i+1);
+    el.style.setProperty("--d",(Math.min(i,5)*STAGGER).toFixed(2)+"s");
+  })});
+  var ro=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("rv-in");ro.unobserve(e.target)}})},{rootMargin:"0px 0px -8% 0px",threshold:.12});
+  $$(".rv").forEach(function(el){ro.observe(el)});
+}
+
+setup();setupReveal();Motion.refresh();
+[desktopMQ,reduceMQ].forEach(function(mq){var h=function(){setup();Motion.refresh()};mq.addEventListener?mq.addEventListener("change",h):mq.addListener(h)});
+reduceMQ.addEventListener&&reduceMQ.addEventListener("change",function(){if(reduceMQ.matches){document.documentElement.classList.remove("js-motion")}});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(Motion.refresh);
+addEventListener("load",Motion.refresh);
+})();
+</script>
+</body>
+</html>
